@@ -44,11 +44,11 @@ allprojects {
     targetCompatibility = 1.8
 
     group 'org.web3j'
-    version '3.2.0'
+    version '3.3.0'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: 'checkstyle'
+//    apply plugin: 'checkstyle'
 
     repositories {
         mavenCentral()
@@ -78,10 +78,10 @@ allprojects {
     }
     */
 
-    checkstyle {
-        toolVersion = "7.7"
-        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-    }
+//    checkstyle {
+//        toolVersion = "7.7"
+//        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
+//    }
 }
 
 subprojects {
@@ -111,6 +111,11 @@ project(':benchmark') {
         classpath = sourceSets.main.runtimeClasspath
         main = 'org.web3j.benchmark.Benchmark'
         args = ['-token', 'src/main/resources/token_test_config.json']
+    }
+
+    task advanceTest(type: JavaExec) {
+        classpath = sourceSets.main.runtimeClasspath
+        main = 'org.web3j.benchmark.AdvanceTest'
     }
 
     task benchJar(type: Jar) {

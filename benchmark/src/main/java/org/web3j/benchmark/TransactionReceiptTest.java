@@ -72,7 +72,7 @@ public class TransactionReceiptTest {
                          if (receipt.hasError()) {
                              this.failed.incrementAndGet();
                          } else {
-                             if (receipt.getTransactionReceipt().isPresent() && (receipt.getTransactionReceipt().get().getErrorMessage() == null)) {
+                             if (receipt.getTransactionReceipt() != null && (receipt.getTransactionReceipt().getErrorMessage() == null)) {
                                  this.succeed.incrementAndGet();
                              } else {
                                  this.failed.incrementAndGet();

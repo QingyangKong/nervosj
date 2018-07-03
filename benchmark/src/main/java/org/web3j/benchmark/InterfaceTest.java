@@ -62,7 +62,7 @@ public class InterfaceTest {
         Random r = new Random(System.currentTimeMillis());
         long nonce = Math.abs(r.nextLong());
         System.out.println("nonce = " + nonce);
-        Transaction rtx = Transaction.createContractTransaction(BigInteger.valueOf(nonce), 1000000, validBlockNumber.longValue() + 88, code);
+        Transaction rtx = Transaction.createContractTransaction(BigInteger.valueOf(nonce), 1000000, validBlockNumber.longValue() + 88,0,  1, code);
         String privateKey = "352416e1c910e413768c51390dfd791b414212b7b4fe6b1a18f58007fa894214";
         String signedTx = rtx.sign(privateKey);
         String validTransactionHash = testEthSendRawTransaction(signedTx).get();
@@ -202,13 +202,13 @@ public class InterfaceTest {
         EthGetTransactionReceipt ethGetTransactionReceipt = web3j.ethGetTransactionReceipt(
                 validTransactionHash).send();
 
-        if(!ethGetTransactionReceipt.getTransactionReceipt().isPresent()) {
+        if(ethGetTransactionReceipt.getTransactionReceipt() == null) {
             System.out.println("the result is null");
             return Optional.empty();
         } else {
             //is option_value is null return NoSuchElementException, else return option_value
             TransactionReceipt transactionReceipt =
-                    ethGetTransactionReceipt.getTransactionReceipt().get();
+                    ethGetTransactionReceipt.getTransactionReceipt();
 
             System.out.println("transactionHash:" + transactionReceipt.getTransactionHash());
             System.out.println("transactionIndex:" + transactionReceipt.getTransactionIndex());

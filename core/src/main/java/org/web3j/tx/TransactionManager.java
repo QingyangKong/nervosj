@@ -3,6 +3,7 @@ package org.web3j.tx;
 import java.io.IOException;
 import java.math.BigInteger;
 
+import org.web3j.crypto.Signature;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -22,7 +23,8 @@ public abstract class TransactionManager {
     public static final long DEFAULT_POLLING_FREQUENCY = DEFAULT_BLOCK_TIME;
 
     private final TransactionReceiptProcessor transactionReceiptProcessor;
-    private final String fromAddress;
+    private String fromAddress;
+    private Signature signature;
 
     protected TransactionManager(
             TransactionReceiptProcessor transactionReceiptProcessor, String fromAddress) {
@@ -30,16 +32,35 @@ public abstract class TransactionManager {
         this.fromAddress = fromAddress;
     }
 
+//    protected TransactionManager(
+//            TransactionReceiptProcessor transactionReceiptProcessor, Signature signature) {
+//        this.transactionReceiptProcessor = transactionReceiptProcessor;
+//        this.signature = signature;
+//    }
+
     protected TransactionManager(Web3j web3j, String fromAddress) {
         this(new PollingTransactionReceiptProcessor(
                         web3j, DEFAULT_POLLING_FREQUENCY, DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH),
                 fromAddress);
     }
 
+//    protected TransactionManager(Web3j web3j, Signature signature) {
+//        this(new PollingTransactionReceiptProcessor(
+//                        web3j, DEFAULT_POLLING_FREQUENCY, DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH),
+//                signature);
+//    }
+
+
     protected TransactionManager(
             Web3j web3j, int attempts, long sleepDuration, String fromAddress) {
         this(new PollingTransactionReceiptProcessor(web3j, sleepDuration, attempts), fromAddress);
     }
+
+//    protected TransactionManager(
+//            Web3j web3j, int attempts, long sleepDuration, Signature signature) {
+//        this(new PollingTransactionReceiptProcessor(web3j, sleepDuration, attempts), signature);
+//    }
+
 
     protected TransactionReceipt executeTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
@@ -54,17 +75,17 @@ public abstract class TransactionManager {
     // adapt to cita
     protected TransactionReceipt executeTransaction(
             String to, String data, BigInteger quota,
-            BigInteger nonce, BigInteger validUntilBlock)
+            BigInteger nonce, BigInteger validUntilBlock, BigInteger version , BigInteger chainId)
             throws IOException, TransactionException {
         EthSendTransaction ethSendTransaction = sendTransaction(
-                to, data, quota, nonce, validUntilBlock);
+                to, data, quota, nonce, validUntilBlock, version , chainId);
         return processResponse(ethSendTransaction);
     }
 
     // adapt to cita, return empty EthSendTransaction default, only CitaTransactionManager will override this method
     public EthSendTransaction sendTransaction(
             String to, String data, BigInteger quota,
-            BigInteger nonce, BigInteger validUntilBlock)
+            BigInteger nonce, BigInteger validUntilBlock, BigInteger version , BigInteger chainId)
             throws IOException {
         return new EthSendTransaction();
     }

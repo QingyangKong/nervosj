@@ -2,7 +2,7 @@ package org.web3j.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,7 +38,7 @@ public abstract class Service implements Web3jService {
     }
 
     @Override
-    public <T extends Response> CompletableFuture<T> sendAsync(
+    public <T extends Response> Future<T> sendAsync(
             Request jsonRpc20Request, Class<T> responseType) {
         return Async.run(() -> send(jsonRpc20Request, responseType));
     }
