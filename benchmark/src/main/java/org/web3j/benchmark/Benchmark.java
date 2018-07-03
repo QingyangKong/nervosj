@@ -2,14 +2,11 @@ package org.web3j.benchmark;
 
 import org.apache.commons.cli.*;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.protocol.core.methods.response.EthMetaData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -77,8 +74,8 @@ public class Benchmark {
 
         if (commandLine.hasOption("token")) {
             String file = commandLine.getOptionValue("token");
-            TokenTest test = new TokenTest(Web3j.build(new HttpService("http://127.0.0.1:1337")), file);
-            //TokenTest test = new TokenTest(Web3j.build(new HttpService("http://47.75.129.215:1337")), file);
+            //TokenTest test = new TokenTest(Web3j.build(new HttpService("http://localhost:1337")), file);
+            TokenTest test = new TokenTest(Web3j.build(new HttpService("http://120.27.213.202:1337")), file);
             test.run();
             return;
         }
@@ -92,25 +89,6 @@ public class Benchmark {
             System.exit(1);
             return 0;
         }
-    }
-
-    public static EthMetaData getMetaData(Web3j service) {
-        try{
-            return service.ethMetaData(DefaultBlockParameter.valueOf("latest"))
-                    .send().getEthMetaData();
-        }catch (Throwable e) {
-            System.out.println("get block failed because of " + e);
-            return null;
-        }
-    }
-    public static EthMetaData getMetaData(Web3j service, long blockNumber) {
-       try{
-           return service.ethMetaData(DefaultBlockParameter.valueOf(BigInteger.valueOf(blockNumber)))
-                   .send().getEthMetaData();
-       }catch (Throwable e) {
-           System.out.println("get block " + blockNumber + " failed because of " + e);
-           return null;
-       }
     }
 
     // Note: t1 < t2

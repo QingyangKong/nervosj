@@ -18,16 +18,15 @@ import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
 
 import static org.abstractj.kalium.encoders.Encoder.HEX;
-
 import org.abstractj.kalium.keys.SigningKey;
 import org.abstractj.kalium.crypto.Hash;
 
 /**
  * Transaction request object used the below methods.
  * <ol>
- * <li>eth_call</li>
- * <li>eth_sendTransaction</li>
- * <li>eth_estimateGas</li>
+ *     <li>eth_call</li>
+ *     <li>eth_sendTransaction</li>
+ *     <li>eth_estimateGas</li>
  * </ol>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -39,16 +38,14 @@ public class Transaction {
     private long valid_until_block;
     private int version = 0;
     private String data;
-    private int chainId;
     private final Hash hash = new Hash();
 
-    public Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String data) {
+    public Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, String data) {
         this.to = to;
         this.nonce = nonce;
         this.quota = quota;
         this.version = version;
         this.valid_until_block = valid_until_block;
-        this.chainId = chainId;
 
         if (data != null) {
             this.data = Numeric.prependHexPrefix(data);
@@ -56,14 +53,15 @@ public class Transaction {
     }
 
     public static Transaction createContractTransaction(
-         BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String init) {
-        return new Transaction("", nonce, quota, valid_until_block, version, chainId, init);
+        BigInteger nonce, long quota, long valid_until_block,int version, String init) {
+
+        return new Transaction("", nonce, quota, valid_until_block, version, init);
     }
 
     public static Transaction createFunctionCallTransaction(
-         String to, BigInteger nonce, long quota, long valid_until_block, int version, String data, int chainId) {
+        String to, BigInteger nonce, long quota, long valid_until_block, int version, String data) {
 
-        return new Transaction(to, nonce, quota, valid_until_block, version, chainId, data);
+        return new Transaction(to, nonce, quota, valid_until_block, version, data);
     }
 
     public String getTo() {
@@ -90,9 +88,6 @@ public class Transaction {
         return data;
     }
 
-    public int getChainId() { return chainId; }
-
-
     private static String convert(BigInteger value) {
         if (value != null) {
             return Numeric.cleanHexPrefix(Numeric.encodeQuantity(value));
@@ -116,7 +111,6 @@ public class Transaction {
         builder.setValidUntilBlock(get_valid_until_block());
         builder.setVersion(getVersion());
         builder.setQuota(getQuota());
-        builder.setChainId(getChainId());
         Blockchain.Transaction tx = builder.build();
 
         byte[] sig;
@@ -126,11 +120,11 @@ public class Transaction {
             byte[] pk = key.getVerifyKey().toBytes();
             byte[] signature = key.sign(message);
             sig = new byte[signature.length + pk.length];
-            System.arraycopy(signature, 0, sig, 0, signature.length);
-            System.arraycopy(pk, 0, sig, signature.length, pk.length);
+            System.arraycopy(signature, 0, sig, 0, signature.length);  
+            System.arraycopy(pk, 0, sig, signature.length, pk.length);  
         } else {
             Credentials credentials = Credentials.create(privateKey);
-            ECKeyPair keyPair = credentials.getEcKeyPair();
+            ECKeyPair keyPair = credentials.getEcKeyPair();    
             Sign.SignatureData signatureData = Sign.signMessage(tx.toByteArray(), keyPair);
             sig = signatureData.get_signature();
         }
@@ -156,7 +150,6 @@ public class Transaction {
         builder.setValidUntilBlock(get_valid_until_block());
         builder.setQuota(getQuota());
         builder.setVersion(getVersion());
-        builder.setChainId(getChainId());
         Blockchain.Transaction tx = builder.build();
 
         ECKeyPair keyPair = credentials.getEcKeyPair();
