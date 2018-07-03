@@ -202,13 +202,13 @@ public class InterfaceTest {
         EthGetTransactionReceipt ethGetTransactionReceipt = web3j.ethGetTransactionReceipt(
                 validTransactionHash).send();
 
-        if(ethGetTransactionReceipt.getTransactionReceipt() == null) {
+        if(!ethGetTransactionReceipt.getTransactionReceipt().isPresent()) {
             System.out.println("the result is null");
             return Optional.empty();
         } else {
             //is option_value is null return NoSuchElementException, else return option_value
             TransactionReceipt transactionReceipt =
-                    ethGetTransactionReceipt.getTransactionReceipt();
+                    ethGetTransactionReceipt.getTransactionReceipt().get();
 
             System.out.println("transactionHash:" + transactionReceipt.getTransactionHash());
             System.out.println("transactionIndex:" + transactionReceipt.getTransactionIndex());

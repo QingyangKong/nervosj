@@ -30,7 +30,7 @@ public class HttpService extends Service {
 
     public static final String DEFAULT_URL = "http://localhost:8545/";
 
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     private OkHttpClient httpClient;
 

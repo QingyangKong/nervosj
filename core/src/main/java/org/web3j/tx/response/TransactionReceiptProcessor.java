@@ -1,6 +1,7 @@
 package org.web3j.tx.response;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
@@ -22,7 +23,7 @@ public abstract class TransactionReceiptProcessor {
             String transactionHash)
             throws IOException, TransactionException;
 
-    TransactionReceipt sendTransactionReceiptRequest(
+    Optional<TransactionReceipt> sendTransactionReceiptRequest(
             String transactionHash) throws IOException, TransactionException {
         EthGetTransactionReceipt transactionReceipt =
                 web3j.ethGetTransactionReceipt(transactionHash).send();

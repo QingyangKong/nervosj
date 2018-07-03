@@ -2,10 +2,9 @@ package org.web3j.tx;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.Signature;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
@@ -15,28 +14,14 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 public class CitaTransactionManager extends TransactionManager {
 
     private final Web3j web3j;
-    private Credentials credentials;
-    private Signature signature;
+    final Credentials credentials;
 
     public CitaTransactionManager(Web3j web3j, Credentials credentials) {
         super(web3j, credentials.getAddress());
         this.web3j = web3j;
         this.credentials = credentials;
-    }
 
-    public CitaTransactionManager(Web3j web3j, Signature signature) {
-        super(web3j, signature.getAddress());
-        this.web3j = web3j;
-        this.signature = signature;
     }
-
-    public CitaTransactionManager(
-            Web3j web3j, Signature signature, int attempts, int sleepDuration) {
-        super(web3j, attempts, sleepDuration, signature.getAddress());
-        this.web3j = web3j;
-        this.signature = signature;
-    }
-
 
     public CitaTransactionManager(
             Web3j web3j, Credentials credentials, int attempts, int sleepDuration) {
@@ -64,29 +49,14 @@ public class CitaTransactionManager extends TransactionManager {
     public EthSendTransaction sendTransaction(
          String to, String data, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version, BigInteger chainId) throws IOException {
         Transaction transaction = new Transaction(to, nonce, quota.longValue(), validUntilBlock.longValue(), version.intValue(), chainId.intValue(), data);
-        String rawtx = null;
-        if(this.credentials != null) {
-            rawtx = transaction.sign(credentials);
-        }
-        if(this.signature != null){
-            rawtx = transaction.sign(signature);
-        }
-
-        return web3j.ethSendRawTransaction(rawtx).send();
+        return web3j.ethSendRawTransaction(transaction.sign(credentials)).send();
     }
 
     // adapt to cita
-    public Future<EthSendTransaction> sendTransactionAsync(
+    public CompletableFuture<EthSendTransaction> sendTransactionAsync(
          String to, String data, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version, int chainId) throws IOException {
         Transaction transaction = new Transaction(to, nonce, quota.longValue(), validUntilBlock.longValue(), version.intValue(), chainId, data);
-        String rawtx = null;
-        if(this.credentials != null) {
-            rawtx = transaction.sign(credentials);
-        }
-        if(this.signature != null){
-            rawtx = transaction.sign(signature);
-        }
-        return web3j.ethSendRawTransaction(rawtx).sendAsync();
+        return web3j.ethSendRawTransaction(transaction.sign(credentials)).sendAsync();
     }
 
     @Override

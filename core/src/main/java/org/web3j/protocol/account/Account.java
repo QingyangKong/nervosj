@@ -22,7 +22,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 public class Account {
     private static final String ABI_ADDRESS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -49,7 +49,7 @@ public class Account {
                 sendTransaction("", contractBin, quota, nonce, getValidUntilBlock(), BigInteger.valueOf(version), BigInteger.valueOf(chainId));
     }
 
-    public Future<EthSendTransaction> deployAsync(File contractFile, BigInteger nonce, BigInteger quota, BigInteger version, int chainId)
+    public CompletableFuture<EthSendTransaction> deployAsync(File contractFile, BigInteger nonce, BigInteger quota, BigInteger version, int chainId)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
         String contractBin = contract.getBin();

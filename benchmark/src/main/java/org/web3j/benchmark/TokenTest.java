@@ -2,12 +2,10 @@ package org.web3j.benchmark;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.Signature;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.CitaTransactionManager;
 
 import java.io.File;
@@ -21,17 +19,15 @@ import java.util.stream.Collectors;
 public class TokenTest {
     private final long initialSupply = 1000000;
     private final static int version = 0;
-    private final static int chainId = 1;
+    private final static int chainId = 530509907;
     private final BigInteger offset = BigInteger.valueOf(80);
     private final Random random = new Random(System.currentTimeMillis());
     private Map<Credentials, Long> accounts;
     private Credentials creator;
     private Web3j service;
     private Token token;
-    private Signature signature;
 
     public TokenTest(Web3j service, String path) throws Exception {
-        HttpService.setDebug(true);
         Accounts accounts = Accounts.load(path);
         this.service = service;
         this.creator = Credentials.create(accounts.creator);
@@ -43,28 +39,36 @@ public class TokenTest {
 
     public void run() throws Exception {
         CitaTransactionManager creatorManager = transactionManagerOf(this.creator);
+        System.out.println("Now, start token test");
         BigInteger currentHeight = this.getCurrentHeight();
-        Future<Token> tokenFuture = Token.deploy(service, creatorManager,
+        CompletableFuture<Token> tokenFuture = Token.deploy(service, creatorManager,
                 BigInteger.valueOf(1000000), nextNonce(),
                 currentHeight.add(this.offset), BigInteger.valueOf(version), BigInteger.valueOf(chainId), BigInteger.valueOf(initialSupply)).sendAsync();
+        tokenFuture.whenCompleteAsync((contract, exception) -> {
+            if (exception != null) {
+                System.out.println("deploy contract failed because of " + exception);
+                exception.printStackTrace();
+                System.exit(1);
+            }
 
-        this.token = tokenFuture.get();
-        System.out.println("deploy success, contract address: " + this.token.getContractAddress());
-        try {
-            testAccountsInit();
-            this.accounts.put(this.creator, this.initialSupply);
-            randomTransferToken();
-        } catch (Throwable e) {
-            System.out.println("test failed because of " + e);
-            e.printStackTrace();
-            System.exit(1);
-        }
+            this.token = contract;
+            System.out.println("deploy success, contract address: " + this.token.getContractAddress());
+            try {
+                testAccountsInit();
+                this.accounts.put(this.creator, this.initialSupply);
+                randomTransferToken();
+            } catch (Throwable e) {
+                System.out.println("test failed because of " + e);
+                e.printStackTrace();
+                System.exit(1);
+            }
+        });
     }
 
     // when start, account hava 0 tokens, creator have initialSupply tokens
     private void testAccountsInit() throws Exception {
         // First, test if the creator have initialSupply tokens
-        Future<BigInteger> tokensOfCreator = this.token.balanceOf(creator.getAddress()).sendAsync();
+        CompletableFuture<BigInteger> tokensOfCreator = this.token.balanceOf(creator.getAddress()).sendAsync();
         BigInteger tokens = tokensOfCreator.get(8, TimeUnit.SECONDS);
         long balanceOfCreator = tokens.longValue();
         assert(balanceOfCreator == initialSupply);
@@ -108,7 +112,7 @@ public class TokenTest {
             TransferEvent event = new TransferEvent(from, to, transfer);
             try {
                 printAccountsBalance();
-                Future<TransactionReceipt> receiptFuture = event.execute(this.service);
+                CompletableFuture<TransactionReceipt> receiptFuture = event.execute(this.service);
                 TransactionReceipt receipt = receiptFuture.get(12, TimeUnit.SECONDS);
                 if (receipt.getErrorMessage() == null) {
                     System.out.println(event + " execute success");
@@ -173,7 +177,7 @@ public class TokenTest {
             if (account != credentials) {
                 TransferEvent event = new TransferEvent(account, credentials, balance);
                 try {
-                    Future<TransactionReceipt> receiptFuture = event.execute(this.service);
+                    CompletableFuture<TransactionReceipt> receiptFuture = event.execute(this.service);
                     TransactionReceipt receipt = receiptFuture.get(12, TimeUnit.SECONDS);
                     if (receipt.getErrorMessage() == null) {
                         System.out.println(event + " execute success");
@@ -213,7 +217,7 @@ public class TokenTest {
     private long balanceOf(Credentials credentials) {
         long balance = Long.MAX_VALUE;
         Token token = tokenOf(credentials);
-        Future<BigInteger> future = token.balanceOf(credentials.getAddress()).sendAsync();
+        CompletableFuture<BigInteger> future = token.balanceOf(credentials.getAddress()).sendAsync();
         try {
             balance = future.get().longValue();
         } catch (InterruptedException|ExecutionException e) {
@@ -224,9 +228,6 @@ public class TokenTest {
 
     private CitaTransactionManager transactionManagerOf(Credentials credentials) {
         return new CitaTransactionManager(service, credentials, 5, 3000);
-    }
-    private CitaTransactionManager transactionManagerOf(Signature signature) {
-        return new CitaTransactionManager(service, signature);
     }
 
     private Token tokenOf(Credentials credentials) {
@@ -252,7 +253,7 @@ public class TokenTest {
             this.tokens = tokens;
         }
 
-        Future<TransactionReceipt> execute(Web3j service) throws IOException {
+        CompletableFuture<TransactionReceipt> execute(Web3j service) throws IOException {
             Token token = TokenTest.this.tokenOf(this.from);
             BigInteger currentHeight = TokenTest.this.getCurrentHeight();
             return token.transfer(this.to.getAddress(), BigInteger.valueOf(tokens),

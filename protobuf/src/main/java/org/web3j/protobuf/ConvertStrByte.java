@@ -17,6 +17,7 @@ public class ConvertStrByte {
 
 
     public static byte[] hexStringToBytes(String src) {
+        src = (src.length() %2 == 1? "0":"") + src;
         int l = src.length() / 2;
         byte[] ret = new byte[l];
         for (int i = 0; i < l; i++) {

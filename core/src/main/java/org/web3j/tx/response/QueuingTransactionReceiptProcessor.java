@@ -1,6 +1,7 @@
 package org.web3j.tx.response;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,16 +33,11 @@ public class QueuingTransactionReceiptProcessor extends TransactionReceiptProces
         super(web3j);
         this.scheduledExecutorService = Async.defaultExecutorService();
         this.callback = callback;
-        this.pendingTransactions = new LinkedBlockingQueue<RequestWrapper>();
+        this.pendingTransactions = new LinkedBlockingQueue<>();
         this.pollingAttemptsPerTxHash = pollingAttemptsPerTxHash;
 
         scheduledExecutorService.scheduleAtFixedRate(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        QueuingTransactionReceiptProcessor.this.sendTransactionReceiptRequests();
-                    }
-                },
+                this::sendTransactionReceiptRequests,
                 pollingFrequency, pollingFrequency, TimeUnit.MILLISECONDS);
     }
 
@@ -57,10 +53,10 @@ public class QueuingTransactionReceiptProcessor extends TransactionReceiptProces
         for (RequestWrapper requestWrapper : pendingTransactions) {
             try {
                 String transactionHash = requestWrapper.getTransactionHash();
-                TransactionReceipt transactionReceipt =
+                Optional<TransactionReceipt> transactionReceipt =
                         sendTransactionReceiptRequest(transactionHash);
-                if (transactionReceipt != null) {
-                    callback.accept(transactionReceipt);
+                if (transactionReceipt.isPresent()) {
+                    callback.accept(transactionReceipt.get());
                     pendingTransactions.remove(requestWrapper);
                 } else {
                     if (requestWrapper.getCount() == pollingAttemptsPerTxHash) {
@@ -72,10 +68,7 @@ public class QueuingTransactionReceiptProcessor extends TransactionReceiptProces
                         requestWrapper.incrementCount();
                     }
                 }
-            } catch (IOException e) {
-                pendingTransactions.remove(requestWrapper);
-                callback.exception(e);
-            } catch (TransactionException e) {
+            } catch (IOException | TransactionException e) {
                 pendingTransactions.remove(requestWrapper);
                 callback.exception(e);
             }

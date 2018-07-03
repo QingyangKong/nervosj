@@ -371,8 +371,6 @@ public abstract class Contract extends ManagedTransaction {
         }
     }
 
-
-
 //    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
 //            Class<T> type,
 //            Web3j web3j, TransactionManager transactionManager,
@@ -385,14 +383,6 @@ public abstract class Contract extends ManagedTransaction {
             Class<T> type,
             Web3j web3j, TransactionManager transactionManager,
             BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version, BigInteger chainId, String binary, String encodedConstructor) {
-        return new RemoteCall<>(() -> deploy(
-                type, web3j, transactionManager, quota, nonce, validUntilBlock, version, binary, chainId, encodedConstructor));
-    }
-
-    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
-            Class<T> type,
-            Web3j web3j, TransactionManager transactionManager,
-            BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version, String binary, BigInteger chainId) {
         return new RemoteCall<>(() -> deploy(
                 type, web3j, transactionManager, quota, nonce, validUntilBlock, version, binary, chainId, ""));
     }

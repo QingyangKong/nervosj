@@ -1,9 +1,10 @@
 package org.web3j.abi.datatypes;
 
+import org.web3j.abi.TypeReference;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.web3j.abi.TypeReference;
+import java.util.stream.Collectors;
 
 public class UnorderedEvent {
     private class EventType {
@@ -33,50 +34,34 @@ public class UnorderedEvent {
     }
 
     public List<TypeReference<Type>> getParameters() {
-        List<TypeReference<Type>> list = new ArrayList<>();
-        for (EventType eventType : this.params) {
-            list.add(eventType.type);
-        }
-        return list;
+        return this.params.stream().map(eventType -> eventType.type).collect(Collectors.toList());
     }
 
     public List<TypeReference<Type>> getIndexedParameters() {
-        List<TypeReference<Type>> list = new ArrayList<>();
-        for (EventType eventType : this.params) {
-            if (eventType.indexed) {
-                list.add(eventType.type);
-            }
-        }
-        return list;
+        return this.params.stream()
+                .filter(eventType -> eventType.indexed)
+                .map(eventType -> eventType.type)
+                .collect(Collectors.toList());
     }
 
     public List<Integer> getIndexedParametersSeq() {
-        List<Integer> list = new ArrayList<>();
-        for (EventType eventType : this.params) {
-            if (eventType.indexed) {
-                list.add(eventType.seqNum);
-            }
-        }
-        return list;
+        return this.params.stream()
+                .filter(eventType -> eventType.indexed)
+                .map(eventType -> eventType.seqNum)
+                .collect(Collectors.toList());
     }
 
     public List<TypeReference<Type>> getNonIndexedParameters() {
-        List<TypeReference<Type>> list = new ArrayList<>();
-        for (EventType eventType : this.params) {
-            if (!eventType.indexed) {
-                list.add(eventType.type);
-            }
-        }
-        return list;
+        return this.params.stream()
+                .filter(eventType -> !eventType.indexed)
+                .map(eventType -> eventType.type)
+                .collect(Collectors.toList());
     }
 
     public List<Integer> getNonIndexedParametersSeq() {
-        List<Integer> list = new ArrayList<>();
-        for (EventType eventType : this.params) {
-            if (!eventType.indexed) {
-                list.add(eventType.seqNum);
-            }
-        }
-        return list;
+        return this.params.stream()
+                .filter(eventType -> !eventType.indexed)
+                .map(eventType -> eventType.seqNum)
+                .collect(Collectors.toList());
     }
 }

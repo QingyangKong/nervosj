@@ -18,8 +18,9 @@ public class TokenTest {
     private static final String fromAddress = "0x0dbd369a741319fa5107733e2c9db9929093e3c7";
     private static final String toAddress = "0x546226ed566d0abb215c9db075fc36476888b310";
     private static final String solPath = "tests/src/main/resources/Token.sol";
+    //private static final String solPath = "tests/src/main/resources/simple.sol";
     private static final int version = 0;
-    private static final int chainId = 1;
+    private static final int chainId = 530509907;
 
     private static Random random;
     private static BigInteger quota;
@@ -40,7 +41,7 @@ public class TokenTest {
 
     private static TransactionReceipt waitToGetReceipt(String hash) throws Exception {
         Thread.sleep(10_000);
-        return service.ethGetTransactionReceipt(hash).send().getTransactionReceipt();
+        return service.ethGetTransactionReceipt(hash).send().getTransactionReceipt().get();
     }
 
     public TokenTest() throws Exception {
@@ -51,6 +52,7 @@ public class TokenTest {
 
     public void deployContract(String path) throws Exception {
         EthSendTransaction ethSendTransaction = account.deploy(new File(path), randomNonce(), quota, version, chainId);
+        System.out.println("result:" + ethSendTransaction.getSendTransactionResult());
         TransactionReceipt receipt = waitToGetReceipt(ethSendTransaction.getSendTransactionResult().getHash());
         if (receipt.getErrorMessage() != null) {
             System.out.println("deploy contract failed because of " + receipt.getErrorMessage());

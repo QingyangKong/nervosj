@@ -44,11 +44,11 @@ allprojects {
     targetCompatibility = 1.8
 
     group 'org.web3j'
-    version '3.3.0'
+    version '3.3.1'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
-//    apply plugin: 'checkstyle'
+    apply plugin: 'checkstyle'
 
     repositories {
         mavenCentral()
@@ -78,10 +78,10 @@ allprojects {
     }
     */
 
-//    checkstyle {
-//        toolVersion = "7.7"
-//        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-//    }
+    checkstyle {
+        toolVersion = "7.7"
+        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
+    }
 }
 
 subprojects {

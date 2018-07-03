@@ -1,6 +1,7 @@
 package org.web3j.tx.response;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -32,18 +33,18 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
             String transactionHash, long sleepDuration, int attempts)
             throws IOException, TransactionException {
 
-        TransactionReceipt transactionReceipt =
+        Optional<TransactionReceipt> receiptOptional =
                 sendTransactionReceiptRequest(transactionHash);
         for (int i = 0; i < attempts; i++) {
-            if (transactionReceipt == null) {
+            if (!receiptOptional.isPresent()) {
                 try {
                     Thread.sleep(sleepDuration);
                 } catch (InterruptedException e) {
                     throw new TransactionException(e);
                 }
-                transactionReceipt = sendTransactionReceiptRequest(transactionHash);
+                receiptOptional = sendTransactionReceiptRequest(transactionHash);
             } else {
-                return transactionReceipt;
+                return receiptOptional.get();
             }
         }
 
