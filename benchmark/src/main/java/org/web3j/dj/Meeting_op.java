@@ -39,7 +39,7 @@ import rx.functions.Func1;
  * <p>Generated with web3j version 3.2.0.
  */
 public class Meeting_op extends Contract {
-    private static final String BINARY = "6060604052341561000f57600080fd5b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506105978061005e6000396000f300606060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063aefacda714610046575b600080fd5b341561005157600080fd5b61020860048080604001906002806020026040519081016040528092919082600260200280828437820191505050505091908060400190600280602002604051908101604052809291908260026020028082843782019150505050509190803560001916906020019091908060800190600480602002604051908101604052809291908260046020028082843782019150505050509190806080019060048060200260405190810160405280929190826004602002808284378201915050505050919080608001906004806020026040519081016040528092919082600460200280828437820191505050505091908035906020019091908035906020019091908060800190600480602002604051908101604052809291908260046020028082843782019150505050509190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919080359060200190820180359060200190808060200260200160405190810160405280939291908181526020018383602002808284378201915050505050509190505061020a565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16638c9540d3336000604051602001526040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050602060405180830381600087803b15156102ce57600080fd5b6102c65a03f115156102df57600080fd5b5050506040518051905015156102f457600080fd5b88600019168a6040518082600260200280838360005b8381101561032557808201518184015260208101905061030a565b5050505090500191505060405180910390208c6040518082600260200280838360005b83811015610363578082015181840152602081019050610348565b5050505090500191505060405180910390207f4f6c69098e69314990a387f29900163de003305293c04a862f9df07551172fec338c8c8c8c8c8c8c8c604051808a73ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200189600460200280838360005b838110156103fc5780820151818401526020810190506103e1565b5050505090500188600460200280838360005b8381101561042a57808201518184015260208101905061040f565b5050505090500187600460200280838360005b8381101561045857808201518184015260208101905061043d565b5050505090500186815260200185815260200184600460200280838360005b83811015610492578082015181840152602081019050610477565b505050509050018060200180602001838103835285818151815260200191508051906020019080838360005b838110156104d95780820151818401526020810190506104be565b50505050905090810190601f1680156105065780820380516001836020036101000a031916815260200191505b50838103825284818151815260200191508051906020019060200280838360005b83811015610542578082015181840152602081019050610527565b505050509050019b50505050505050505050505060405180910390a450505050505050505050505600a165627a7a72305820208a75b225a3a82b4fb19db81314d9f81ee59bd69dfd34c695da61741d0a6ade0029";
+    private static final String BINARY = "6060604052341561000f57600080fd5b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506105f78061005e6000396000f300606060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063aefacda714610046575b600080fd5b341561005157600080fd5b61020860048080604001906002806020026040519081016040528092919082600260200280828437820191505050505091908060400190600280602002604051908101604052809291908260026020028082843782019150505050509190803560001916906020019091908060800190600480602002604051908101604052809291908260046020028082843782019150505050509190806080019060048060200260405190810160405280929190826004602002808284378201915050505050919080608001906004806020026040519081016040528092919082600460200280828437820191505050505091908035906020019091908035906020019091908060800190600480602002604051908101604052809291908260046020028082843782019150505050509190803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437820191505050505050919080359060200190820180359060200190808060200260200160405190810160405280939291908181526020018383602002808284378201915050505050509190505061020a565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16638c9540d3336000604051602001526040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050602060405180830381600087803b15156102ce57600080fd5b6102c65a03f115156102df57600080fd5b5050506040518051905015156102f457600080fd5b88600019168a6040518082600260200280838360005b8381101561032557808201518184015260208101905061030a565b5050505090500191505060405180910390208c6040518082600260200280838360005b83811015610363578082015181840152602081019050610348565b5050505090500191505060405180910390207fbefc71ad0e18c01a75a2e1863479e53a60772f7873bc90b73977785d4f1079ef338f8f8e8e8e8e8e8e8e8e604051808c73ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018b600260200280838360005b838110156103fe5780820151818401526020810190506103e3565b505050509050018a600260200280838360005b8381101561042c578082015181840152602081019050610411565b5050505090500189600460200280838360005b8381101561045a57808201518184015260208101905061043f565b5050505090500188600460200280838360005b8381101561048857808201518184015260208101905061046d565b5050505090500187600460200280838360005b838110156104b657808201518184015260208101905061049b565b5050505090500186815260200185815260200184600460200280838360005b838110156104f05780820151818401526020810190506104d5565b505050509050018060200180602001838103835285818151815260200191508051906020019080838360005b8381101561053757808201518184015260208101905061051c565b50505050905090810190601f1680156105645780820380516001836020036101000a031916815260200191505b50838103825284818151815260200191508051906020019060200280838360005b838110156105a0578082015181840152602081019050610585565b505050509050019d505050505050505050505050505060405180910390a450505050505050505050505600a165627a7a7230582054b1b8c5337362cff5eee85cccf61a8a89c18c6668dd13540bf1be2552b502cb0029\n";
 
     protected Meeting_op(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
         super(BINARY, contractAddress, web3j, transactionManager);
@@ -48,7 +48,7 @@ public class Meeting_op extends Contract {
     public List<MeetingUploadedEventResponse> getMeetingUploadedEvents(TransactionReceipt transactionReceipt) {
         final Event event = new Event("MeetingUploaded", 
                 Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray2<Bytes32>>() {}, new TypeReference<StaticArray2<Bytes32>>() {}, new TypeReference<Bytes32>() {}),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<Uint256>() {}, new TypeReference<Uint256>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<Utf8String>() {}, new TypeReference<DynamicArray<Bytes32>>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<StaticArray2<Bytes32>>() {}, new TypeReference<StaticArray2<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<Uint256>() {}, new TypeReference<Uint256>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<Utf8String>() {}, new TypeReference<DynamicArray<Bytes32>>() {}));
         List<EventValues> valueList = extractEventParameters(event, transactionReceipt);
         ArrayList<MeetingUploadedEventResponse> responses = new ArrayList<MeetingUploadedEventResponse>(valueList.size());
         for (EventValues eventValues : valueList) {
@@ -57,14 +57,16 @@ public class Meeting_op extends Contract {
             typedResponse.launchOrg = (byte[]) eventValues.getIndexedValues().get(1).getValue();
             typedResponse.meetType = (byte[]) eventValues.getIndexedValues().get(2).getValue();
             typedResponse.orgId = (String) eventValues.getNonIndexedValues().get(0).getValue();
-            typedResponse.meetDigest = (List<byte[]>) eventValues.getNonIndexedValues().get(1).getValue();
-            typedResponse._meetName = (List<byte[]>) eventValues.getNonIndexedValues().get(2).getValue();
-            typedResponse._basicInfo = (List<byte[]>) eventValues.getNonIndexedValues().get(3).getValue();
-            typedResponse.planedPersons = (BigInteger) eventValues.getNonIndexedValues().get(4).getValue();
-            typedResponse.actualPersons = (BigInteger) eventValues.getNonIndexedValues().get(5).getValue();
-            typedResponse.opInfo = (List<byte[]>) eventValues.getNonIndexedValues().get(6).getValue();
-            typedResponse.topic = (String) eventValues.getNonIndexedValues().get(7).getValue();
-            typedResponse.fileHash = (List<byte[]>) eventValues.getNonIndexedValues().get(8).getValue();
+            typedResponse._meetId = (List<byte[]>) eventValues.getNonIndexedValues().get(1).getValue();
+            typedResponse._laucnchOrg = (List<byte[]>) eventValues.getNonIndexedValues().get(2).getValue();
+            typedResponse.meetDigest = (List<byte[]>) eventValues.getNonIndexedValues().get(3).getValue();
+            typedResponse._meetName = (List<byte[]>) eventValues.getNonIndexedValues().get(4).getValue();
+            typedResponse._basicInfo = (List<byte[]>) eventValues.getNonIndexedValues().get(5).getValue();
+            typedResponse.planedPersons = (BigInteger) eventValues.getNonIndexedValues().get(6).getValue();
+            typedResponse.actualPersons = (BigInteger) eventValues.getNonIndexedValues().get(7).getValue();
+            typedResponse.opInfo = (List<byte[]>) eventValues.getNonIndexedValues().get(8).getValue();
+            typedResponse.topic = (String) eventValues.getNonIndexedValues().get(9).getValue();
+            typedResponse.fileHash = (List<byte[]>) eventValues.getNonIndexedValues().get(10).getValue();
             responses.add(typedResponse);
         }
         return responses;
@@ -73,7 +75,7 @@ public class Meeting_op extends Contract {
     public Observable<MeetingUploadedEventResponse> meetingUploadedEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         final Event event = new Event("MeetingUploaded", 
                 Arrays.<TypeReference<?>>asList(new TypeReference<StaticArray2<Bytes32>>() {}, new TypeReference<StaticArray2<Bytes32>>() {}, new TypeReference<Bytes32>() {}),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<Uint256>() {}, new TypeReference<Uint256>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<Utf8String>() {}, new TypeReference<DynamicArray<Bytes32>>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<StaticArray2<Bytes32>>() {}, new TypeReference<StaticArray2<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<Uint256>() {}, new TypeReference<Uint256>() {}, new TypeReference<StaticArray4<Bytes32>>() {}, new TypeReference<Utf8String>() {}, new TypeReference<DynamicArray<Bytes32>>() {}));
         EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(event));
         return web3j.ethLogObservable(filter).map(new Func1<Log, MeetingUploadedEventResponse>() {
@@ -85,14 +87,16 @@ public class Meeting_op extends Contract {
                 typedResponse.launchOrg = (byte[]) eventValues.getIndexedValues().get(1).getValue();
                 typedResponse.meetType = (byte[]) eventValues.getIndexedValues().get(2).getValue();
                 typedResponse.orgId = (String) eventValues.getNonIndexedValues().get(0).getValue();
-                typedResponse.meetDigest = (List<byte[]>) eventValues.getNonIndexedValues().get(1).getValue();
-                typedResponse._meetName = (List<byte[]>) eventValues.getNonIndexedValues().get(2).getValue();
-                typedResponse._basicInfo = (List<byte[]>) eventValues.getNonIndexedValues().get(3).getValue();
-                typedResponse.planedPersons = (BigInteger) eventValues.getNonIndexedValues().get(4).getValue();
-                typedResponse.actualPersons = (BigInteger) eventValues.getNonIndexedValues().get(5).getValue();
-                typedResponse.opInfo = (List<byte[]>) eventValues.getNonIndexedValues().get(6).getValue();
-                typedResponse.topic = (String) eventValues.getNonIndexedValues().get(7).getValue();
-                typedResponse.fileHash = (List<byte[]>) eventValues.getNonIndexedValues().get(8).getValue();
+                typedResponse._meetId = (List<byte[]>) eventValues.getNonIndexedValues().get(1).getValue();
+                typedResponse._laucnchOrg = (List<byte[]>) eventValues.getNonIndexedValues().get(2).getValue();
+                typedResponse.meetDigest = (List<byte[]>) eventValues.getNonIndexedValues().get(3).getValue();
+                typedResponse._meetName = (List<byte[]>) eventValues.getNonIndexedValues().get(4).getValue();
+                typedResponse._basicInfo = (List<byte[]>) eventValues.getNonIndexedValues().get(5).getValue();
+                typedResponse.planedPersons = (BigInteger) eventValues.getNonIndexedValues().get(6).getValue();
+                typedResponse.actualPersons = (BigInteger) eventValues.getNonIndexedValues().get(7).getValue();
+                typedResponse.opInfo = (List<byte[]>) eventValues.getNonIndexedValues().get(8).getValue();
+                typedResponse.topic = (String) eventValues.getNonIndexedValues().get(9).getValue();
+                typedResponse.fileHash = (List<byte[]>) eventValues.getNonIndexedValues().get(10).getValue();
                 return typedResponse;
             }
         });
@@ -139,6 +143,10 @@ public class Meeting_op extends Contract {
         public byte[] meetType;
 
         public String orgId;
+
+        public List<byte[]> _meetId;
+
+        public List<byte[]> _laucnchOrg;
 
         public List<byte[]> meetDigest;
 

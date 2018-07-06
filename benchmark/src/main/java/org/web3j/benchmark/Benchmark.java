@@ -74,8 +74,7 @@ public class Benchmark {
 
         if (commandLine.hasOption("token")) {
             String file = commandLine.getOptionValue("token");
-            //TokenTest test = new TokenTest(Web3j.build(new HttpService("http://localhost:1337")), file);
-            TokenTest test = new TokenTest(Web3j.build(new HttpService("http://120.27.213.202:1337")), file);
+            TokenTest test = new TokenTest(Web3j.build(new HttpService("http://localhost:1337")), file);
             test.run();
             return;
         }

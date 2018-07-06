@@ -25,7 +25,7 @@ public class DeployTest {
 
 
     public DeployTest() throws Exception {
-        HttpService.setDebug(true);
+        HttpService.setDebug(false);
         this.service = Web3j.build(new HttpService("http://localhost:1337"));
         this.creator = Credentials.create(privateKey);
         transactionManager = new CitaTransactionManager(service, creator, 5, 3000);

@@ -40,7 +40,7 @@ public class RegisterTest {
     }
 
     public static void main(String args[]) throws Exception {
-        String registerAddress = "0x38a6a377835ebd9446ec38051b16370cd1ea6626";
+        String registerAddress = "0x61d76f1416b1d1bbd5778d1fa17377731d81eaa2";
         RegisterTest registerTest = new RegisterTest();
         registerTest.newOrg(registerAddress);
         registerTest.getEthLOg(DefaultBlockParameter.valueOf(BigInteger.ONE), DefaultBlockParameter.valueOf("latest"), registerAddress);

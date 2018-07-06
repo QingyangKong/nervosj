@@ -43,7 +43,7 @@ public class MeetingOpTest {
     }
 
     public static void main(String args[]) throws Exception {
-        String meetingAddress = "0x672fd39f6a72b895ad0f8a4eb896850051118706";
+        String meetingAddress = "0x0f6640f3b85163ef9ce2024b547861aa88c047f8";
         MeetingOpTest meetingOpTest = new MeetingOpTest();
         meetingOpTest.uploadMeeting(meetingAddress);
         meetingOpTest.getEthLOg(DefaultBlockParameter.valueOf(BigInteger.ONE), DefaultBlockParameter.valueOf("latest"), meetingAddress);
@@ -52,19 +52,19 @@ public class MeetingOpTest {
     public void uploadMeeting(String contractAddress) {
         System.out.println("----------------start uploadMeeting test-----------------------------");
         List<byte[]> _meetId = new ArrayList<>();
-        _meetId.add(DjUtils.stringToByteArray("00000001"));
-        _meetId.add(DjUtils.stringToByteArray(" "));
+        _meetId.add(DjUtils.stringToByteArray("1"));
+        _meetId.add(DjUtils.stringToByteArray("2"));
 
         List<byte[]> _launchOrg = new ArrayList<>();
-        _launchOrg.add(DjUtils.stringToByteArray("1"));
-        _launchOrg.add(DjUtils.stringToByteArray("2"));
+        _launchOrg.add(DjUtils.stringToByteArray("中国lkdjal"));
+        _launchOrg.add(DjUtils.stringToByteArray("招行kadf"));
 
         String meetType ="重要";
         byte[] _meetType = DjUtils.stringToByteArray(meetType);
 
         List<byte[]> _meetDigest = new ArrayList<>();
         _meetDigest.add(DjUtils.stringToByteArray("会议结果会议内容内容"));
-        _meetDigest.add(DjUtils.stringToByteArray("会议结果2"));
+        _meetDigest.add(DjUtils.stringToByteArray("会议结果20"));
         _meetDigest.add(DjUtils.stringToByteArray("会议结果3"));
         _meetDigest.add(DjUtils.stringToByteArray("会议结果4"));
 
@@ -79,14 +79,14 @@ public class MeetingOpTest {
         byte[] meetDate = DjUtils.stringToByteArray("日期");
         byte[] startTime = DjUtils.stringToByteArray("开始时间");
         byte[] endTime = DjUtils.stringToByteArray("结束时间");
-        byte[] location = DjUtils.stringToByteArray("定位");
+        byte[] location = DjUtils.stringToByteArray("会议定位");
         _basicInfo.add(meetDate);
         _basicInfo.add(startTime);
         _basicInfo.add(endTime);
         _basicInfo.add(location);
 
         int planedPersons = 5;
-        int actualPesons = 3;
+        int actualPesons = 9;
 
         String operateDate = "0523";
         String operateTime = "14:00";
@@ -150,6 +150,7 @@ public class MeetingOpTest {
                 List<String> strs = log.getTopics();
 
                 System.out.println("topics:");
+                System.out.println("hash: " + strs.get(0) + "  ");
                 System.out.println("meetId: " + strs.get(1) + "  " + DjUtils.hexToString(strs.get(1).substring(2)));
                 System.out.println("launchOrg: " + strs.get(2) + "  " + DjUtils.hexToString(strs.get(2).substring(2)));
                 System.out.println("meetType: " + strs.get(3) + "  " + DjUtils.hexToString(strs.get(3).substring(2)));

@@ -44,7 +44,7 @@ public class DevProcesstest {
     }
 
     public static void main(String args[]) throws Exception {
-        String devProcessAddress = "0x005716d31993d3255a918c8452b3c271b1ce77db";
+        String devProcessAddress = "0x851d4ad4bc524a12812493fa9f004eb6f5fffab8";
         DevProcesstest registerTest = new DevProcesstest();
         registerTest.applyForParty(devProcessAddress);
     }
