@@ -10,6 +10,7 @@ import org.abstractj.kalium.keys.SigningKey;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
+import org.web3j.crypto.Signature;
 import org.web3j.protobuf.Blockchain;
 import org.web3j.protobuf.Blockchain.Crypto;
 import org.web3j.protobuf.ConvertStrByte;
@@ -123,9 +124,32 @@ public class Transaction {
         }
     }
 
-    public String sign(String privateKey, boolean isEd25519AndBlake2b, boolean isByteArray) {
-        Blockchain.Transaction.Builder builder = Blockchain.Transaction.newBuilder();
 
+    public String sign(String privateKey) {
+        return sign(privateKey, false, false);
+    }
+
+    public String sign(String privateKey, boolean isEd25519AndBlake2b, boolean isByteArray) {
+        byte[] tx = seriRawTransaction(isByteArray);
+        byte[] sig = this.getSignature(privateKey, tx, isEd25519AndBlake2b);
+        return seriUnverifiedTransaction(sig, tx);
+    }
+
+    public String sign(Signature signature) {
+        byte[] tx = seriRawTransaction(false);
+        byte[] sig = signature.getSignature(tx);
+        return seriUnverifiedTransaction(sig, tx);
+    }
+
+    // just used to secp256k1
+    public String sign(Credentials credentials) {
+        byte[] tx = seriRawTransaction(false);
+        byte[] sig = this.getSignature(credentials, tx);
+        return seriUnverifiedTransaction(sig, tx);
+    }
+
+    public byte[] seriRawTransaction(boolean isByteArray) {
+        Blockchain.Transaction.Builder builder = Blockchain.Transaction.newBuilder();
         byte[] strbyte;
         if (isByteArray) {
             strbyte = getData().getBytes();
@@ -134,23 +158,47 @@ public class Transaction {
         }
         ByteString bdata = ByteString.copyFrom(strbyte);
 
-        byte[] byteValue = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getValue()));
-        ByteString bvalue = ByteString.copyFrom(byteValue);
-
         builder.setData(bdata);
         builder.setNonce(getNonce());
         builder.setTo(getTo());
         builder.setValidUntilBlock(get_valid_until_block());
-        builder.setVersion(getVersion());
         builder.setQuota(getQuota());
+        builder.setVersion(getVersion());
         builder.setChainId(getChainId());
-        builder.setValue(bvalue);
-        Blockchain.Transaction tx = builder.build();
 
+        return builder.build().toByteArray();
+    }
+
+    public String seriUnverifiedTransaction(byte[] sig, byte[] tx) {
+
+        Blockchain.UnverifiedTransaction utx = null;
+        try {
+            Blockchain.Transaction transaction = Blockchain.Transaction.parseFrom(tx);
+            Blockchain.UnverifiedTransaction.Builder builder1 = Blockchain.UnverifiedTransaction.newBuilder();
+            builder1.setTransaction(transaction);
+            builder1.setSignature(ByteString.copyFrom(sig));
+            builder1.setCrypto(Crypto.SECP);
+            utx = builder1.build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String txStr = ConvertStrByte.bytesToHexString(utx.toByteArray());
+        return Numeric.prependHexPrefix(txStr);
+    }
+
+    public byte[] getSignature(Credentials credentials, byte[] tx) {
+        ECKeyPair keyPair = credentials.getEcKeyPair();
+        Sign.SignatureData signatureData = Sign.signMessage(tx, keyPair);
+        return signatureData.get_signature();
+    }
+
+    public byte[] getSignature(String privateKey, byte[] tx, boolean isEd25519AndBlake2b) {
+        Hash hash = new Hash();
         byte[] sig;
+
         if (isEd25519AndBlake2b) {
-            byte[] message = hash.blake2(
-                    tx.toByteArray(), "CryptapeCryptape".getBytes(), null, null);
+            byte[] message = hash.blake2(tx, "CryptapeCryptape".getBytes(), null, null);
             SigningKey key = new SigningKey(privateKey, HEX);
             byte[] pk = key.getVerifyKey().toBytes();
             byte[] signature = key.sign(message);
@@ -160,54 +208,10 @@ public class Transaction {
         } else {
             Credentials credentials = Credentials.create(privateKey);
             ECKeyPair keyPair = credentials.getEcKeyPair();
-            Sign.SignatureData signatureData = Sign.signMessage(tx.toByteArray(), keyPair);
+            Sign.SignatureData signatureData = Sign.signMessage(tx, keyPair);
             sig = signatureData.get_signature();
         }
 
-        Blockchain.UnverifiedTransaction.Builder builder1 =
-                Blockchain.UnverifiedTransaction.newBuilder();
-        builder1.setTransaction(tx);
-        builder1.setSignature(ByteString.copyFrom(sig));
-        builder1.setCrypto(Crypto.SECP);
-        Blockchain.UnverifiedTransaction utx = builder1.build();
-        String txStr = ConvertStrByte.bytesToHexString(utx.toByteArray());
-
-        return Numeric.prependHexPrefix(txStr);
-    }
-
-    // just used to secp256k1
-    public String sign(Credentials credentials) {
-        Blockchain.Transaction.Builder builder = Blockchain.Transaction.newBuilder();
-        byte[] strbyte = ConvertStrByte.hexStringToBytes(
-                Numeric.cleanHexPrefix(getData()));
-        ByteString bdata = ByteString.copyFrom(strbyte);
-
-        byte[] byteValue = ConvertStrByte.hexStringToBytes(
-                Numeric.cleanHexPrefix(getValue()));
-        ByteString bvalue = ByteString.copyFrom(byteValue);
-
-        builder.setData(bdata);
-        builder.setNonce(getNonce());
-        builder.setTo(getTo());
-        builder.setValidUntilBlock(get_valid_until_block());
-        builder.setQuota(getQuota());
-        builder.setVersion(getVersion());
-        builder.setChainId(getChainId());
-        builder.setValue(bvalue);
-        Blockchain.Transaction tx = builder.build();
-
-        ECKeyPair keyPair = credentials.getEcKeyPair();
-        Sign.SignatureData signatureData = Sign.signMessage(tx.toByteArray(), keyPair);
-        byte[] sig = signatureData.get_signature();
-
-        Blockchain.UnverifiedTransaction.Builder builder1 =
-                Blockchain.UnverifiedTransaction.newBuilder();
-        builder1.setTransaction(tx);
-        builder1.setSignature(ByteString.copyFrom(sig));
-        builder1.setCrypto(Crypto.SECP);
-        Blockchain.UnverifiedTransaction utx = builder1.build();
-        String txStr = ConvertStrByte.bytesToHexString(utx.toByteArray());
-
-        return Numeric.prependHexPrefix(txStr);
+        return sig;
     }
 }
