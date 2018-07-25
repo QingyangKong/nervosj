@@ -66,9 +66,11 @@ public class Utils {
             } else if (StaticArray.class.isAssignableFrom(type)) {
                 Class<U> parameterizedType = getParameterizedTypeFromArray(typeReference);
                 String parameterizedTypeName = getSimpleTypeName(parameterizedType);
+                String typeStr = type.toString();
+                int size = Integer.parseInt(typeStr.substring(typeStr.length()-1, typeStr.length()));
                 return parameterizedTypeName
                         + "["
-                        + ((TypeReference.StaticArrayTypeReference) typeReference).getSize()
+                        + size
                         + "]";
             } else {
                 throw new UnsupportedOperationException("Invalid type provided " + type.getName());

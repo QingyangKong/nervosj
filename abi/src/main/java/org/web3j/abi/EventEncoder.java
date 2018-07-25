@@ -26,6 +26,8 @@ public class EventEncoder {
 
         String methodSignature = buildMethodSignature(function.getName(),
                 indexedParameters, nonIndexedParameters);
+        System.out.println(methodSignature);
+
 
         return buildEventSignature(methodSignature);
     }

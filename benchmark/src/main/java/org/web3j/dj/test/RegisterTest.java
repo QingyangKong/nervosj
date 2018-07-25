@@ -40,7 +40,7 @@ public class RegisterTest {
     }
 
     public static void main(String args[]) throws Exception {
-        String registerAddress = "0x61d76f1416b1d1bbd5778d1fa17377731d81eaa2";
+        String registerAddress = "0x9fbcb86d98a1a1a2f53fc5b2cfd71fa374d446e9";
         RegisterTest registerTest = new RegisterTest();
         registerTest.newOrg(registerAddress);
         registerTest.getEthLOg(DefaultBlockParameter.valueOf(BigInteger.ONE), DefaultBlockParameter.valueOf("latest"), registerAddress);
@@ -78,6 +78,13 @@ public class RegisterTest {
             receipt = future.get(12, TimeUnit.SECONDS);
             if (receipt.getErrorMessage() == null) {
                 System.out.println(" execute newOrg success");
+                String memIdAddr = reg.memIdAddr(committee).send();
+                String memInfoAddr = reg.memInfoAddr(committee).send();
+                String memBasicInfoAddr = reg.memBasicInfoAddr(committee).send();
+
+                System.out.println("memIdAddr: " + memIdAddr);
+                System.out.println("memInfoAddr: " + memInfoAddr);
+                System.out.println("memBasicInfoAddr: " + memBasicInfoAddr);
             } else {
                 System.out.println(" execute newOrg failed, " + receipt.getErrorMessage());
             }
@@ -86,12 +93,12 @@ public class RegisterTest {
         }
         System.out.println("---------------------end newOrg test-----------------------------");
     }
+
     //获取日志
     public void getEthLOg(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock, String contractAdress) {
         try {
             //构建filter,添加topics
             org.web3j.protocol.core.methods.request.EthFilter filter = new EthFilter(startBlock, endBlock, contractAdress);
-
             filter.addSingleTopic(null);
 
             List<EthLog.LogResult> logs = service.ethGetLogs(filter).send().getLogs();
@@ -122,4 +129,5 @@ public class RegisterTest {
             System.out.println("get log" + "failed because of " + e);
         }
     }
+
 }

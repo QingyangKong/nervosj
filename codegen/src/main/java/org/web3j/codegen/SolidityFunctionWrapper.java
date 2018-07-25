@@ -21,6 +21,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
+import org.web3j.abi.datatypes.generated.Bytes32;
 import rx.functions.Func1;
 
 import org.web3j.abi.EventEncoder;

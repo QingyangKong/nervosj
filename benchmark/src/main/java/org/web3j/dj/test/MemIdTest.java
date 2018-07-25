@@ -50,6 +50,7 @@ public class MemIdTest {
 
     public void addId(String contractAddress, String mem, String id) {
         System.out.println("---------------------start addId test-----------------------------");
+
         try {
             Mem_id_op mem_id_op = Mem_id_op.load(contractAddress, service, transactionManager);
             System.out.println("mem_id_op.isvalid() = " + mem_id_op.isValid());
@@ -60,11 +61,13 @@ public class MemIdTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         System.out.println("---------------------end addId test-----------------------------\n");
     }
 
     public boolean isMem(String _mem) {
         System.out.println("---------------------start isMem test-----------------------------");
+
         boolean status = false;
         try {
             String registerAddress = "0x38a6a377835ebd9446ec38051b16370cd1ea6626";
@@ -77,12 +80,14 @@ public class MemIdTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         System.out.println("---------------------end isMem test-----------------------------\n");
         return status;
     }
 
     public boolean queryUsers() {
         System.out.println("---------------------start queryUsers test-----------------------------");
+
         boolean status = false;
         try {
             String registerAddress = "0x38a6a377835ebd9446ec38051b16370cd1ea6626";
@@ -99,6 +104,7 @@ public class MemIdTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         System.out.println("---------------------end queryUsers test-----------------------------\n");
         return status;
     }

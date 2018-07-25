@@ -33,7 +33,7 @@ public class DevProcesstest {
     private DjUtils utils;
 
     public DevProcesstest() throws Exception {
-        HttpService.setDebug(true);
+        HttpService.setDebug(false);
         this.service = Web3j.build(new HttpService("http://localhost:1337"));
         this.creator = Credentials.create(privateKey);
         System.out.println(this.creator.getAddress());
@@ -44,11 +44,11 @@ public class DevProcesstest {
     }
 
     public static void main(String args[]) throws Exception {
-        String devProcessAddress = "0x851d4ad4bc524a12812493fa9f004eb6f5fffab8";
-        DevProcesstest registerTest = new DevProcesstest();
-        registerTest.applyForParty(devProcessAddress);
+        String devProcessAddress = "0x11d95e076272f4868af6d028820d20f7e28cfe7a";
+        DevProcesstest devProcesstest = new DevProcesstest();
+        devProcesstest.applyForParty(devProcessAddress);
+        devProcesstest.getEthLOg(DefaultBlockParameter.valueOf(BigInteger.ONE), DefaultBlockParameter.valueOf("latest"), devProcessAddress);
     }
-
 
     public void applyForParty(String contractAddress) {
         System.out.println("---------------------Now, start applyForParty test-----------------------------");
@@ -72,7 +72,6 @@ public class DevProcesstest {
         _institution.add(b2_institution);
 
         byte[] _desc = utils.stringToByteArray("介绍");
-        ;
         String _committee = "0x0dbd369a741319fa5107733e2c9db9929093e3c7";
 
         Dev_process_op devProcessOp = Dev_process_op.load(contractAddress, this.service, transactionManager);
@@ -86,11 +85,40 @@ public class DevProcesstest {
             receipt = future.get(12, TimeUnit.SECONDS);
             if (receipt.getErrorMessage() == null) {
                 System.out.println(" execute applyForParty success");
+                devProcessOp.getDevProcessEvents(receipt);
             } else {
                 System.out.println(" execute applyForParty failed, " + receipt.getErrorMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    //获取日志
+    public void getEthLOg(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock, String contractAdress) {
+        try {
+            //构建filter,添加topics
+            EthFilter filter = new EthFilter(startBlock, endBlock, contractAdress);
+            filter.addSingleTopic(null);
+            filter.addSingleTopic(null);
+            //filter.addSingleTopic("0x77dc3d788bb4770f074ee3940bcea3c3b09ef2668bee25bdcbad6f331f59bbce");
+
+            List<EthLog.LogResult> logs = service.ethGetLogs(filter).send().getLogs();
+            System.out.println("logs.size() = " + logs.size());
+            for (int i = 0; i < logs.size(); i++) {
+                EthLog.LogResult<EthLog.LogObject> result = logs.get(i);
+                Log log = result.get();
+
+                System.out.println("-----------------------------log Topics starting---------------------------------");
+                List<String> strs = log.getTopics();
+
+                System.out.println("topics:");
+                System.out.println("hash: " + strs.get(0) + "  ");
+                System.out.println("hash: " + strs.get(1) + "  ");
+                System.out.println("hash: " + strs.get(2) + "  ");
+            }
+        } catch (Throwable e) {
+            System.out.println("get log" + "failed because of " + e);
         }
     }
 

@@ -46,8 +46,8 @@ public class PartyDevTest {
 
     //新建党组织机构操作
     public void applyForParty(String contractAddress) {
-
         System.out.println("---------------------Now, start newOrg test-----------------------------");
+
         String orgId = "123";
         String memberId = "123";
         String currGroup = "当前党组织";
@@ -89,12 +89,12 @@ public class PartyDevTest {
             } else {
                 System.out.println(" execute newOrg failed, " + receipt.getErrorMessage());
             }
-//            getEthLOg(DefaultBlockParameter.valueOf(BigInteger.ONE), DefaultBlockParameter.valueOf("latest"), contractAddress);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-   public byte[] strToBytes(String data) throws IOException {
-        return Hex.decode(data);
-   }
+
+//   public byte[] strToBytes(String data) throws IOException {
+//        return Hex.decode(data);
+//   }
 }

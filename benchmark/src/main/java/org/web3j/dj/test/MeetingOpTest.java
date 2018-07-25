@@ -1,8 +1,10 @@
 package org.web3j.dj.test;
 
+import org.web3j.abi.datatypes.generated.Bytes32;
 import org.web3j.crypto.Credentials;
 import org.web3j.dj.DjUtils;
 import org.web3j.dj.Meeting_op;
+import org.web3j.protobuf.ConvertStrByte;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.request.EthFilter;
@@ -11,6 +13,8 @@ import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.CitaTransactionManager;
+import org.web3j.utils.Convert;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -43,7 +47,7 @@ public class MeetingOpTest {
     }
 
     public static void main(String args[]) throws Exception {
-        String meetingAddress = "0x0f6640f3b85163ef9ce2024b547861aa88c047f8";
+        String meetingAddress = "0xd4898850edc8b816ba9fbb25fee9dc59fc4b54fd";
         MeetingOpTest meetingOpTest = new MeetingOpTest();
         meetingOpTest.uploadMeeting(meetingAddress);
         meetingOpTest.getEthLOg(DefaultBlockParameter.valueOf(BigInteger.ONE), DefaultBlockParameter.valueOf("latest"), meetingAddress);
@@ -121,6 +125,8 @@ public class MeetingOpTest {
 
             if (transactionReceipt.getErrorMessage() == null) {
                 System.out.println(" execute uploadMeeting success");
+
+                meeting_op.getMeetingUploadedEvents(transactionReceipt);
             } else {
                 System.out.println(" execute uploadMeeting failed, " + transactionReceipt.getErrorMessage());
             }

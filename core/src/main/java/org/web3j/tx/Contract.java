@@ -437,6 +437,7 @@ public abstract class Contract extends ManagedTransaction {
 
         List<String> topics = log.getTopics();
         String encodedEventSignature = EventEncoder.encode(event);
+        System.out.println(encodedEventSignature);
         if (!topics.get(0).equals(encodedEventSignature)) {
             return null;
         }
