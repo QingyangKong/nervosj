@@ -174,7 +174,8 @@ public class Transaction {
         Blockchain.UnverifiedTransaction utx = null;
         try {
             Blockchain.Transaction transaction = Blockchain.Transaction.parseFrom(tx);
-            Blockchain.UnverifiedTransaction.Builder builder1 = Blockchain.UnverifiedTransaction.newBuilder();
+            Blockchain.UnverifiedTransaction.Builder builder1 = Blockchain
+                    .UnverifiedTransaction.newBuilder();
             builder1.setTransaction(transaction);
             builder1.setSignature(ByteString.copyFrom(sig));
             builder1.setCrypto(Crypto.SECP);

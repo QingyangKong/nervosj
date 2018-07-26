@@ -70,10 +70,11 @@ public class CitaTransactionManager extends TransactionManager {
                 version.intValue(), chainId, value, data);
 
         String rawtx = null;
-        if(this.credentials != null) {
+        if (this.credentials != null) {
             rawtx = transaction.sign(credentials);
         }
-        if(this.signature != null){
+
+        if (this.signature != null) {
             rawtx = transaction.sign(signature);
         }
         return web3j.ethSendRawTransaction(rawtx).send();
@@ -88,10 +89,11 @@ public class CitaTransactionManager extends TransactionManager {
                 to, nonce, quota.longValue(), validUntilBlock.longValue(),
                 version.intValue(), chainId, value, data);
         String rawtx = null;
-        if(this.credentials != null) {
+        if (this.credentials != null) {
             rawtx = transaction.sign(credentials);
         }
-        if(this.signature != null){
+
+        if (this.signature != null) {
             rawtx = transaction.sign(signature);
         }
 
