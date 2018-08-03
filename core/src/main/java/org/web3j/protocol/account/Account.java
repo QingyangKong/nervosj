@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 public class Account {
-    private static final String ABI_ADDRESS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    private static final String ABI_ADDRESS = "ffffffffffffffffffffffffffffffffff010001";
     private CitaTransactionManager transactionManager;
     private Web3j service;
     private String abi;

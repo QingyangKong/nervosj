@@ -8,14 +8,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.web3j.protocol.ObjectMapperFactory;
 import org.web3j.protocol.core.Response;
 import org.web3j.utils.Numeric;
+
 
 /**
  * Block object returned by:
@@ -49,19 +48,54 @@ public class EthBlock extends Response<EthBlock.Block> {
         return getResult() == null;
     }
 
+    public static class TendermintCommit {
+        private String commitAddress;
+        private String commit;
 
-    public static class Proof {
+        public TendermintCommit() {
+        }
+
+        ;
+
+        public TendermintCommit(String commitAddress, String commit) {
+            this.commitAddress = commitAddress;
+            this.commit = commit;
+        }
+
+        public String getCommitAddress() {
+            return this.commitAddress;
+        }
+
+        public void setCommitAddress(String commitAddress) {
+            this.commitAddress = commitAddress;
+        }
+
+        public String getCommit() {
+            return this.commit;
+        }
+
+        public void setCommit(String commit) {
+            this.commit = commit;
+        }
+    }
+
+    public static class Tendermint {
         private String proposal;
         private String height;
         private String round;
+        private TendermintCommit[] tendermintCommits;
 
-        public Proof(){
+        Tendermint() {
         }
 
-        public Proof(String proposal, String height, String round){
+        ;
+
+        public Tendermint(String proposal, String height,
+                          String round, TendermintCommit[] tendermintCommits) {
             this.proposal = proposal;
             this.height = height;
             this.round = round;
+            this.tendermintCommits = tendermintCommits;
         }
 
         public String getProposal() {
@@ -88,6 +122,38 @@ public class EthBlock extends Response<EthBlock.Block> {
             this.round = round;
         }
 
+        public TendermintCommit[] getTendermintCommits() {
+            return this.tendermintCommits;
+        }
+
+        public void setTendermintCommits(
+                TendermintCommit[] tendermintCommits) {
+            this.tendermintCommits = tendermintCommits;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Tendermint)) {
+                return false;
+            }
+
+            Tendermint tendermint = (Tendermint) o;
+
+            if (getHeight() != null
+                    ? !getHeight().equals(tendermint.getHeight()) : tendermint.getHeight() != null) {
+                return false;
+            }
+            if (getProposal() != null
+                    ? !getProposal().equals(tendermint.getProposal()) : tendermint.getProposal() != null) {
+                return false;
+            }
+            return (getRound() != null
+                    ? getRound().equals(tendermint.getRound()) : tendermint.getRound() == null);
+        }
+
         @Override
         public int hashCode() {
             int result = getProposal() != null ? getProposal().hashCode() : 0;
@@ -98,8 +164,28 @@ public class EthBlock extends Response<EthBlock.Block> {
     }
 
 
-    public static class Header{
-        private long timestamp;
+    public static class Proof {
+        private Tendermint Tendermint;
+
+        public Proof() {
+        }
+
+        public Proof(Tendermint tendermint) {
+            this.Tendermint = tendermint;
+        }
+
+        public Tendermint getTendermint() {
+            return Tendermint;
+        }
+
+        public void setTendermint(Tendermint tendermint) {
+            this.Tendermint = tendermint;
+        }
+    }
+
+
+    public static class Header {
+        private Long timestamp;
         private String prevHash;
         private String number;
         private String stateRoot;
@@ -107,13 +193,14 @@ public class EthBlock extends Response<EthBlock.Block> {
         private String receiptsRoot;
         private String gasUsed;
         private Proof proof;
+        private String proposer;
 
 
-        public Header(){
+        public Header() {
         }
 
         public Header(long timestamp, String prevHash, String number, String stateRoot,
-                      String transactionsRoot, String receiptsRoot, String gasUsed, Proof proof){
+                      String transactionsRoot, String receiptsRoot, String gasUsed, Proof proof, String proposer) {
             this.timestamp = timestamp;
             this.prevHash = prevHash;
             this.number = number;
@@ -122,9 +209,10 @@ public class EthBlock extends Response<EthBlock.Block> {
             this.receiptsRoot = receiptsRoot;
             this.gasUsed = gasUsed;
             this.proof = proof;
+            this.proposer = proposer;
         }
 
-        public long getTimestamp() {
+        public Long getTimestamp() {
             return timestamp;
         }
 
@@ -196,36 +284,103 @@ public class EthBlock extends Response<EthBlock.Block> {
             this.proof = proof;
         }
 
+        public String getProposer() {
+            return proposer;
+        }
+
+        public void setProposer(String proposer) {
+            this.proposer = proposer;
+        }
+
         @Override
         public int hashCode() {
             int result = 0;
-            result = 31 * result + (getPrevHash() != null ? getPrevHash().hashCode() : 0);
-            result = 31 * result + (getNumber() != null ? getNumber().hashCode() : 0);
-            result = 31 * result + (getStateRoot() != null ? getStateRoot().hashCode() : 0);
-            result = 31 * result + (getTransactionsRoot() != null ? getTransactionsRoot().hashCode() : 0);
-            result = 31 * result + (getReceiptsRoot() != null ? getReceiptsRoot().hashCode() : 0);
-            result = 31 * result + (getGasUsed() != null ? getGasUsed().hashCode() : 0);
-            result = 31 * result + (getProof() != null ? getProof().hashCode() : 0);
+            result = 31 * result + (getPrevHash() != null
+                    ? getPrevHash().hashCode() : 0);
+            result = 31 * result + (getNumber() != null
+                    ? getNumber().hashCode() : 0);
+            result = 31 * result + (getStateRoot() != null
+                    ? getStateRoot().hashCode() : 0);
+            result = 31 * result + (getTransactionsRoot() != null
+                    ? getTransactionsRoot().hashCode() : 0);
+            result = 31 * result + (getReceiptsRoot() != null
+                    ? getReceiptsRoot().hashCode() : 0);
+            result = 31 * result + (getGasUsed() != null
+                    ? getGasUsed().hashCode() : 0);
+            result = 31 * result + (getProof() != null
+                    ? getProof().hashCode() : 0);
             return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Header)) {
+                return false;
+            }
+
+            Header header = (Header) o;
+
+            if (getTimestamp() != null
+                    ? !getTimestamp().equals(header.getTimestamp())
+                    : header.getTimestamp() != null) {
+                return false;
+            }
+            if (getPrevHash() != null
+                    ? !getPrevHash().equals(header.getPrevHash())
+                    : header.getPrevHash() != null) {
+                return false;
+            }
+            if (getNumber() != null
+                    ? !getNumber().equals(header.getNumber()) : header.getNumber() != null) {
+                return false;
+            }
+            if (getStateRoot() != null
+                    ? !getStateRoot().equals(header.getStateRoot())
+                    : header.getStateRoot() != null) {
+                return false;
+            }
+            if (getTransactionsRoot() != null
+                    ? !getTransactionsRoot().equals(header.getTransactionsRoot())
+                    : header.getTransactionsRoot() != null) {
+                return false;
+            }
+            if (getReceiptsRoot() != null
+                    ? !getReceiptsRoot().equals(header.getReceiptsRoot())
+                    : header.getReceiptsRoot() != null) {
+                return false;
+            }
+            if (getGasUsed() != null
+                    ? !getGasUsed().equals(header.getGasUsed()) : header.getGasUsed() != null) {
+                return false;
+            }
+            if (getReceiptsRoot() != null
+                    ? !getReceiptsRoot().equals(header.getReceiptsRoot())
+                    : header.getReceiptsRoot() != null) {
+                return false;
+            }
+            return (getProof() != null
+                    ? getProof().equals(header.getProof()) : header.getProof() == null);
         }
     }
 
     public static class Body {
-        private List<TransactionResult> transactions;
+        private List<TransactionObject> transactions;
 
         public Body() {
         }
 
-        public Body(List<TransactionResult> transactions) {
+        public Body(List<TransactionObject> transactions) {
             this.transactions = transactions;
         }
 
-        public List<TransactionResult> getTransactions() {
+        public List<TransactionObject> getTransactions() {
             return transactions;
         }
 
-        @JsonDeserialize(using = EthBlock.ResultTransactionDeserialiser.class)
-        public void setTransactions(List<TransactionResult> transactions) {
+        public void setTransactions(List<TransactionObject> transactions) {
             this.transactions = transactions;
         }
 
@@ -233,6 +388,21 @@ public class EthBlock extends Response<EthBlock.Block> {
         public int hashCode() {
             int result = getTransactions() != null ? getTransactions().hashCode() : 0;
             return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Body)) {
+                return false;
+            }
+
+            Body body = (Body) o;
+            return (getTransactions() != null
+                    ? getTransactions().equals(body.getTransactions())
+                    : body.getTransactions() == null);
         }
     }
 
@@ -242,10 +412,10 @@ public class EthBlock extends Response<EthBlock.Block> {
         private Header header;
         private Body body;
 
-        public Block(){
+        public Block() {
         }
 
-        public Block(String version, String hash, Header header, Body body){
+        public Block(String version, String hash, Header header, Body body) {
             this.version = version;
             this.hash = hash;
             this.header = header;
@@ -285,6 +455,33 @@ public class EthBlock extends Response<EthBlock.Block> {
         }
 
         @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Block)) {
+                return false;
+            }
+
+            Block block = (Block) o;
+
+            if (getHeader() != null
+                    ? !getHeader().equals(block.getHeader()) : block.getHeader() != null) {
+                return false;
+            }
+            if (getBody() != null
+                    ? !getBody().equals(block.getBody()) : block.getBody() != null) {
+                return false;
+            }
+            if (getHash() != null
+                    ? !getHash().equals(block.getHash()) : block.getHash() != null) {
+                return false;
+            }
+            return (getVersion() != null
+                    ? getVersion().equals(block.getVersion()) : block.getVersion() == null);
+        }
+
+        @Override
         public int hashCode() {
             int result = getVersion() != null ? getVersion().hashCode() : 0;
             result = 31 * result + (getHash() != null ? getHash().hashCode() : 0);
@@ -297,45 +494,45 @@ public class EthBlock extends Response<EthBlock.Block> {
     public interface TransactionResult<T> {
         T get();
     }
-
-    public static class TransactionHash implements TransactionResult<String> {
-        private String value;
-
-        public TransactionHash() {
-        }
-
-        public TransactionHash(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String get() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof TransactionHash)) {
-                return false;
-            }
-
-            TransactionHash that = (TransactionHash) o;
-
-            return value != null ? value.equals(that.value) : that.value == null;
-        }
-
-        @Override
-        public int hashCode() {
-            return value != null ? value.hashCode() : 0;
-        }
-    }
+//
+//    public static class TransactionHash implements TransactionResult<String> {
+//        private String value;
+//
+//        public TransactionHash() {
+//        }
+//
+//        public TransactionHash(String value) {
+//            this.value = value;
+//        }
+//
+//        @Override
+//        public String get() {
+//            return value;
+//        }
+//
+//        public void setValue(String value) {
+//            this.value = value;
+//        }
+//
+//        @Override
+//        public boolean equals(Object o) {
+//            if (this == o) {
+//                return true;
+//            }
+//            if (!(o instanceof TransactionHash)) {
+//                return false;
+//            }
+//
+//            TransactionHash that = (TransactionHash) o;
+//
+//            return value != null ? value.equals(that.value) : that.value == null;
+//        }
+//
+//        @Override
+//        public int hashCode() {
+//            return value != null ? value.hashCode() : 0;
+//        }
+//    }
 
     public static class TransactionObject extends Transaction
             implements TransactionResult<Transaction> {
@@ -357,49 +554,68 @@ public class EthBlock extends Response<EthBlock.Block> {
         }
     }
 
-    public static class ResultTransactionDeserialiser
-            extends JsonDeserializer<List<TransactionResult>> {
-
-        private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
-
-        @Override
-        public List<TransactionResult> deserialize(
-                JsonParser jsonParser,
-                DeserializationContext deserializationContext) throws IOException {
-
-            List<TransactionResult> transactionResults = new ArrayList<>();
-            JsonToken nextToken = jsonParser.nextToken();
-
-            if (nextToken == JsonToken.START_OBJECT) {
-                Iterator<TransactionObject> transactionObjectIterator =
-                        objectReader.readValues(jsonParser, TransactionObject.class);
-                while (transactionObjectIterator.hasNext()) {
-                    transactionResults.add(transactionObjectIterator.next());
-                }
-            } else if (nextToken == JsonToken.VALUE_STRING) {
-                jsonParser.getValueAsString();
-
-                Iterator<TransactionHash> transactionHashIterator =
-                        objectReader.readValues(jsonParser, TransactionHash.class);
-                while (transactionHashIterator.hasNext()) {
-                    transactionResults.add(transactionHashIterator.next());
-                }
-            }
-
-            return transactionResults;
-        }
-    }
-
     public static class ResponseDeserialiser extends JsonDeserializer<Block> {
-
-        private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
 
         @Override
         public Block deserialize(
                 JsonParser jsonParser,
                 DeserializationContext deserializationContext) throws IOException {
             if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
-                return objectReader.readValue(jsonParser, Block.class);
+                JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+                //block meta
+                String blockVersion = node.get("version").asText();
+                String blockHash = node.get("hash").asText();
+
+                //block header
+                JsonNode headerNode = node.get("header");
+                Long timeStamp = headerNode.get("timestamp").asLong();
+                String prevHash = headerNode.get("prevHash").asText();
+                String number = headerNode.get("number").asText();
+                String stateRoot = headerNode.get("stateRoot").asText();
+                String transactionsRoot = headerNode.get("transactionsRoot").asText();
+                String receiptsRoot = headerNode.get("receiptsRoot").asText();
+                String gasUsed = headerNode.get("gasUsed").asText();
+                String proposer = headerNode.get("proposer").asText();
+
+                //proof tendermint
+                JsonNode proofNode = node.get("header").get("proof").get("Tendermint");
+                String proposal = proofNode.get("proposal").asText();
+                String height = proofNode.get("height").asText();
+                String round = proofNode.get("round").asText();
+
+                //proof tendermint commits
+                List<TendermintCommit> tendermintCommits = new ArrayList<>();
+                JsonNode commitsNode = node.get("header").get("proof").get("Tendermint").get("commits");
+                Iterator<String> commitsAddress = commitsNode.fieldNames();
+                while (commitsAddress.hasNext()) {
+                    String commitAddress = commitsAddress.next();
+                    String commit = commitsNode.get(commitAddress).asText();
+                    tendermintCommits.add(new TendermintCommit(commitAddress, commit));
+                }
+
+                //body transactions
+                List<TransactionObject> transactionObjs = new ArrayList<TransactionObject>();
+                JsonNode transactionNode = node.get("body").get("transactions");
+                Iterator<JsonNode> txNodes = transactionNode.elements();
+                while (txNodes.hasNext()) {
+                    JsonNode txNode = txNodes.next();
+                    TransactionObject txToAdd = new TransactionObject();
+                    txToAdd.setHash(txNode.get("hash").asText());
+                    txToAdd.setContent(txNode.get("content").asText());
+                    txToAdd.setBlockHash(blockHash);
+                    txToAdd.setBlockNumber(number);
+                    transactionObjs.add(txToAdd);
+                }
+
+                Tendermint tendermint = new Tendermint(
+                        proposal, height, round,
+                        tendermintCommits.toArray(
+                                new TendermintCommit[tendermintCommits.size()]));
+
+                Header header = new Header(timeStamp, prevHash, number, stateRoot,
+                        transactionsRoot, receiptsRoot, gasUsed, new Proof(tendermint), proposer);
+                Body body = new Body(transactionObjs);
+                return new Block(blockVersion, blockHash, header, body);
             } else {
                 return null;  // null is wrapped by Optional in above getter
             }
