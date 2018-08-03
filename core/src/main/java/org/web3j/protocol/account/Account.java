@@ -32,7 +32,7 @@ import org.web3j.tx.CitaTransactionManager;
 import org.web3j.utils.TypedAbi;
 
 public class Account {
-    private static final String ABI_ADDRESS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    private static final String ABI_ADDRESS = "ffffffffffffffffffffffffffffffffff010001";
     private CitaTransactionManager transactionManager;
     private Web3j service;
     private String abi;
